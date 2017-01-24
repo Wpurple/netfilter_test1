@@ -18,31 +18,17 @@ void hexdump(unsigned char* buf, int size)
 	for(i=0;i<size;i++)
 	{
 		//if(i%16==0) printf("\n");
-		printf("%c", buf[i]);//printf("%02x ", buf[i]);
+		printf("%c", buf[i]); //printf("%02x ", buf[i]);
 	}
 
-//	printf("pkt size = %d\n", size);
-	
-	if(strstr(buffer, "Host: ")!=NULL) 
-	{	
-		nfq_set_verdict(qh, id, NF_DROP, 0, NULL);
-		printf("..Blocked..\n");
-	}
-	//else printf("");
 }*/
 
 int block(struct nfq_data *tb)
 {
 	unsigned char *data;
-	int ret;
+	int ret, result;
 
 	ret = nfq_get_payload(tb, &data);//eht header 제외, ip header 부터 시작
-
-	//char * buffer;
-	//buffer = data+40;
-	int result;
-
-	
 	if (ret >= 0)
 	{
 		if(strstr((data+40), "Host: www.sex.com")!=NULL) 
@@ -50,8 +36,7 @@ int block(struct nfq_data *tb)
 			result = 1;
 		}
 		else result = 0;
-	}
-	
+	}	
 }
 
 /* returns packet id */
@@ -105,7 +90,6 @@ static u_int32_t print_pkt (struct nfq_data *tb)
 	{
 		printf("payload_len=%d ", ret);
 		//hexdump(data, ret);
-		//block(data);
 	}
 	fputc('\n', stdout);
 
